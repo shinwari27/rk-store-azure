@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RK Store — Premium iPhones on Azure</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#050B18; --surf:#0D1528; --card:#111E35;
+      --blue:#2563EB; --bL:#3B82F6; --bG:rgba(37,99,235,.18);
+      --gold:#F59E0B; --gG:rgba(245,158,11,.18);
+      --teal:#14B8A6; --green:#10B981; --red:#EF4444;
+      --txt:#F1F5F9; --txtS:#94A3B8; --txtM:#64748B;
+      --bdr:rgba(255,255,255,.07); --bdrB:rgba(37,99,235,.35);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt)}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:#050B18}
+    ::-webkit-scrollbar-thumb{background:#2563EB;border-radius:3px}
+
+    /* ── Navbar ── */
+    .rk-nav{background:rgba(5,11,24,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--bdr)}
+    .navbar-brand{font-size:1.5rem;font-weight:900;letter-spacing:-.04em;background:linear-gradient(135deg,#fff,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .rk-nav .nav-link{color:var(--txtS)!important;font-weight:600;font-size:.84rem;padding:8px 16px!important;border-radius:8px;border:1px solid transparent;transition:all .2s}
+    .rk-nav .nav-link:hover,.rk-nav .nav-link.active{color:var(--bL)!important;background:rgba(37,99,235,.15);border-color:var(--bdrB)}
+    .navbar-toggler{border:none;color:var(--txtS)}
+    .navbar-toggler:focus{box-shadow:none}
+
+    /* ── Cards ── */
+    .rk-card{background:var(--card);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;transition:all .3s cubic-bezier(.4,0,.2,1);position:relative}
+    .rk-card:hover{transform:translateY(-6px);border-color:var(--bdrB);box-shadow:0 28px 64px rgba(0,0,0,.55),0 0 40px var(--bG)}
+    .card-img-wrap{height:200px;display:flex;align-items:center;justify-content:center}
+
+    /* ── Badges ── */
+    .b-new{background:rgba(37,99,235,.18);color:var(--bL);border:1px solid rgba(37,99,235,.3);font-size:.58rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+    .b-used{background:rgba(245,158,11,.12);color:#FCD34D;border:1px solid rgba(245,158,11,.3);font-size:.58rem;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+    .b-sale{background:rgba(239,68,68,.16);color:#FCA5A5;border:1px solid rgba(239,68,68,.28);font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:4px}
+    .b-lim{background:var(--gG);color:var(--gold);border:1px solid rgba(245,158,11,.36);font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:4px}
+    .sb-in{background:rgba(16,185,129,.12);color:#34D399;border:1px solid rgba(16,185,129,.28);font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+    .sb-ls{background:rgba(245,158,11,.09);color:#FCD34D;border:1px solid rgba(245,158,11,.2);font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+    .sb-nl{background:var(--gG);color:var(--gold);border:1px solid rgba(245,158,11,.38);font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+    .sb-out{background:rgba(239,68,68,.13);color:#FCA5A5;border:1px solid rgba(239,68,68,.3);font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+
+    /* ── Buttons ── */
+    .btn-rk{background:var(--blue);color:#fff;border:none;font-weight:700;border-radius:9px;transition:all .2s;font-family:'Inter',sans-serif;cursor:pointer}
+    .btn-rk:hover:not(:disabled){background:var(--bL);color:#fff;transform:translateY(-1px)}
+    .btn-rk:disabled{background:rgba(255,255,255,.05);color:var(--txtM);cursor:not-allowed;transform:none}
+    .btn-ghost{background:rgba(255,255,255,.04);color:var(--txtS);border:1px solid var(--bdr);font-weight:600;border-radius:9px;transition:all .2s;font-family:'Inter',sans-serif;cursor:pointer}
+    .btn-ghost:hover{border-color:var(--blue);color:var(--bL)}
+    .btn-filter{background:transparent;color:var(--txtS);border:1px solid var(--bdr);font-weight:600;font-size:.82rem;border-radius:8px;padding:8px 18px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+    .btn-filter.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+    /* ── Hero ── */
+    .hero{min-height:88vh;display:flex;align-items:center;position:relative;overflow:hidden;background:radial-gradient(ellipse 80% 55% at 50% 18%,rgba(37,99,235,.12) 0%,transparent 60%),radial-gradient(ellipse 55% 40% at 88% 72%,rgba(20,184,166,.07) 0%,transparent 50%),var(--bg)}
+    .hero-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.08) 0%,transparent 70%);top:-120px;right:-80px;pointer-events:none;animation:pulse 5s ease-in-out infinite}
+
+    /* ── Section headers ── */
+    .eyebrow{font-size:.67rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bL);margin-bottom:9px}
+    .sec-title{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+    .sec-sub{color:var(--txtS);font-size:.92rem}
+
+    /* ── Spec pill ── */
+    .spec-pill{font-size:.6rem;padding:2px 6px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:4px;color:var(--txtS)}
+
+    /* ── Prices ── */
+    .price-orig{font-size:.71rem;color:var(--txtM);text-decoration:line-through}
+    .price-main{font-size:1.17rem;font-weight:800;letter-spacing:-.02em}
+
+    /* ── Category cards ── */
+    .cat-card{background:var(--surf);border:1px solid var(--bdr);border-radius:15px;padding:26px 18px;text-align:center;cursor:pointer;transition:all .3s}
+
+    /* ── Forms ── */
+    .rk-input{background:var(--card);border:1px solid var(--bdr);color:var(--txt);padding:12px 16px;border-radius:10px;font-size:.9rem;outline:none;font-family:'Inter',sans-serif;width:100%;transition:border-color .2s,box-shadow .2s}
+    .rk-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--bG)}
+    .rk-label{font-size:.7rem;font-weight:600;color:var(--txtS);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px}
+    select.rk-input{appearance:none}
+    select.rk-input option{background:#0D1528;color:#F1F5F9}
+
+    /* ── Modal ── */
+    .modal-content{background:var(--surf);border:1px solid var(--bdr);border-radius:20px;color:var(--txt)}
+    .modal-header{border-bottom:1px solid var(--bdr);padding:18px 24px}
+    .btn-close{filter:invert(1);opacity:.6}
+    .modal-backdrop.show{opacity:.84}
+
+    /* ── Loading Spinner ── */
+    #pageLoader{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+    .loader-ring{width:44px;height:44px;border:3px solid var(--bdr);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loader-txt{font-size:.82rem;color:var(--txtM);font-weight:500}
+
+    /* ── Toast ── */
+    .rk-toast{background:var(--surf);border-radius:11px;padding:13px 17px;display:flex;align-items:center;gap:9px;min-width:230px;box-shadow:0 8px 32px rgba(0,0,0,.5);font-size:.85rem;font-weight:600;animation:fadeIn .3s ease}
+    .rk-toast.success{border:1px solid rgba(16,185,129,.28);border-left:3px solid var(--green)}
+    .rk-toast.error{border:1px solid rgba(239,68,68,.28);border-left:3px solid var(--red)}
+
+    /* ── Azure badges ── */
+    .az-badge{background:rgba(37,99,235,.09);border:1px solid rgba(37,99,235,.2);color:var(--bL);font-size:.61rem;font-weight:600;padding:3px 8px;border-radius:5px}
+
+    /* ── Gradient text ── */
+    .grad-txt{background:linear-gradient(135deg,#fff,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .grad-txt-h{background:linear-gradient(135deg,#fff 0%,#3B82F6 50%,#14B8A6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    /* ── Footer ── */
+    #main-footer{background:var(--surf);border-top:1px solid var(--bdr)}
+    .foot-link{color:var(--txtM);font-size:.86rem;margin-bottom:9px;cursor:pointer;transition:color .2s;display:block;text-decoration:none}
+    .foot-link:hover{color:var(--bL)}
+
+    /* ── Animations ── */
+    @keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.08);opacity:1}}
+    @keyframes fadeIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:translateX(0)}}
+    .fl1{animation:float1 4s ease-in-out infinite}
+    .fl2{animation:float2 4s ease-in-out infinite 1.1s}
+    .fl3{animation:float1 4s ease-in-out infinite .55s}
+  </style>
+</head>
+<body>
+
+<!-- Loading Spinner — shown while /api/products/ loads -->
+<div id="pageLoader">
+  <div class="loader-ring"></div>
+  <div class="loader-txt">Loading RK Store...</div>
+</div>
+
+<!-- ════════════ NAVBAR ════════════ -->
+<nav class="navbar navbar-expand-md rk-nav sticky-top" id="mainNav">
+  <div class="container-xl">
+    <a class="navbar-brand grad-txt" href="#" onclick="go('home');return false">RK Store</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <i class="bi bi-list" style="font-size:1.5rem;color:var(--txtS)"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-1">
+        <li class="nav-item"><a class="nav-link active" href="#" data-sec="home"    onclick="go('home');return false">Home</a></li>
+        <li class="nav-item"><a class="nav-link"        href="#" data-sec="catalog" onclick="go('catalog');return false">Catalog</a></li>
+        <li class="nav-item"><a class="nav-link"        href="#" data-sec="order"   onclick="go('order');return false">Order Now</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Toast container -->
+<div id="toastArea" style="position:fixed;top:70px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px"></div>
+
+<!-- ════════════ HOME ════════════ -->
+<div id="sec-home" class="rk-section">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container-xl w-100 py-5">
+      <div class="row align-items-center g-5">
+        <div class="col-md-6">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div style="width:22px;height:2px;background:var(--bL);border-radius:1px"></div>
+            <span style="font-size:.67rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bL)">Canada's Premier iPhone Destination</span>
+          </div>
+          <h1 style="font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;letter-spacing:-.04em;line-height:1.06;margin-bottom:22px">
+            Premium iPhones.<br>
+            <span class="grad-txt-h">Powered by Azure.</span>
+          </h1>
+          <p style="font-size:1rem;color:var(--txtS);line-height:1.78;max-width:440px;margin-bottom:34px">
+            Shop new and certified pre-owned iPhones with real-time stock validation, instant order confirmation, and enterprise-grade cloud reliability.
+          </p>
+          <div class="d-flex gap-3 flex-wrap mb-4">
+            <button class="btn-rk px-4 py-3" onclick="go('catalog')">Shop All iPhones <i class="bi bi-chevron-right ms-1"></i></button>
+            <button class="btn-ghost px-4 py-3" onclick="go('order')">Place an Order</button>
+          </div>
+          <div class="d-flex gap-4 flex-wrap" style="font-size:.75rem;color:var(--txtM)">
+            <span>🛡️ Certified Pre-Owned</span>
+            <span>⚡ Instant Confirmation</span>
+            <span>📦 Canada-Wide Delivery</span>
+          </div>
+        </div>
+        <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center gap-3" id="heroPhones" style="min-height:360px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <div style="background:var(--surf);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:26px 0">
+    <div class="container-xl">
+      <div class="row text-center g-3">
+        <div class="col-3"><div style="font-size:1.7rem;font-weight:900;color:var(--bL)">12+</div><div style="font-size:.71rem;color:var(--txtM)">iPhone Models</div></div>
+        <div class="col-3"><div style="font-size:1.7rem;font-weight:900;color:var(--bL)">500+</div><div style="font-size:.71rem;color:var(--txtM)">Happy Customers</div></div>
+        <div class="col-3"><div style="font-size:1.7rem;font-weight:900;color:var(--bL)">3-Tier</div><div style="font-size:.71rem;color:var(--txtM)">Cloud Architecture</div></div>
+        <div class="col-3"><div style="font-size:1.7rem;font-weight:900;color:var(--bL)">100%</div><div style="font-size:.71rem;color:var(--txtM)">Azure Powered</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div style="background:var(--bg);padding:68px 0 0">
+    <div class="container-xl">
+      <div class="eyebrow">Browse by Category</div>
+      <div class="sec-title">Find Your iPhone</div>
+      <div class="sec-sub mb-4">New arrivals, certified used, and exclusive deals — all in one place.</div>
+      <div class="row row-cols-2 row-cols-md-4 g-3 mb-5" id="catCards"></div>
+    </div>
+  </div>
+
+  <!-- Featured Products -->
+  <div style="background:var(--surf);padding:68px 0">
+    <div class="container-xl">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div><div class="eyebrow">Handpicked for You</div><div class="sec-title">Featured Products</div></div>
+        <button class="btn-ghost px-3 py-2" style="font-size:.8rem;white-space:nowrap" onclick="go('catalog')">View All <i class="bi bi-chevron-right"></i></button>
+      </div>
+      <div class="row row-cols-2 row-cols-md-4 g-4" id="featuredGrid"></div>
+    </div>
+  </div>
+
+  <!-- Latest Arrivals -->
+  <div style="background:var(--bg);padding:68px 0">
+    <div class="container-xl">
+      <div class="eyebrow">Just In</div>
+      <div class="sec-title">Latest Arrivals</div>
+      <div class="sec-sub mb-4">The newest iPhone models, available now.</div>
+      <div class="row row-cols-2 row-cols-md-4 g-4" id="latestGrid"></div>
+    </div>
+  </div>
+
+  <!-- Special Offers -->
+  <div style="background:var(--surf);padding:68px 0">
+    <div class="container-xl">
+      <div class="eyebrow">Limited-Time Deals</div>
+      <div class="sec-title">Special Offers</div>
+      <div class="sec-sub mb-4">Save big on premium iPhones — while supplies last.</div>
+      <div class="row row-cols-1 row-cols-md-2 g-4" id="offersGrid"></div>
+    </div>
+  </div>
+
+  <!-- Limited Stock -->
+  <div style="background:var(--bg);padding:68px 0">
+    <div class="container-xl">
+      <div class="eyebrow">Almost Gone</div>
+      <div class="sec-title">Limited Stock</div>
+      <div class="sec-sub mb-4">These units are selling fast. Don't miss out.</div>
+      <div class="row row-cols-1 row-cols-md-2 g-4" id="limitedGrid"></div>
+    </div>
+  </div>
+</div><!-- /sec-home -->
+
+<!-- ════════════ CATALOG ════════════ -->
+<div id="sec-catalog" class="rk-section d-none" style="background:var(--surf);min-height:90vh;padding:56px 0">
+  <div class="container-xl">
+    <div class="eyebrow">All Products</div>
+    <div class="sec-title">iPhone Catalog</div>
+    <div class="sec-sub mb-4" id="catCount"></div>
+    <div class="position-relative mb-3">
+      <i class="bi bi-search position-absolute" style="left:15px;top:50%;transform:translateY(-50%);color:var(--txtM)"></i>
+      <input type="text" id="searchInput" class="rk-input" placeholder="Search by model, color, storage…" style="padding-left:42px" oninput="onSearch(this.value)">
+    </div>
+    <div class="d-flex gap-2 flex-wrap mb-4" id="filterTabs">
+      <button class="btn-filter active" data-f="all"     onclick="setFilter('all')">All</button>
+      <button class="btn-filter"        data-f="new"     onclick="setFilter('new')">New iPhones</button>
+      <button class="btn-filter"        data-f="used"    onclick="setFilter('used')">Certified Used</button>
+      <button class="btn-filter"        data-f="special" onclick="setFilter('special')">Special Offers</button>
+      <button class="btn-filter"        data-f="limited" onclick="setFilter('limited')">Limited Stock</button>
+    </div>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4" id="catalogGrid"></div>
+    <div id="noResults" class="text-center py-5 d-none" style="color:var(--txtM)">
+      <i class="bi bi-search d-block mb-3" style="font-size:2.5rem;opacity:.25"></i>
+      <div style="font-size:1.05rem;font-weight:600">No products found</div>
+      <div style="font-size:.82rem;margin-top:5px">Try a different search or filter</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ORDER ════════════ -->
+<div id="sec-order" class="rk-section d-none" style="background:var(--bg);min-height:90vh;padding:56px 0">
+  <div class="container" style="max-width:680px">
+    <div class="eyebrow">Place Your Order</div>
+    <div class="sec-title">Order Form</div>
+    <div class="sec-sub mb-4">Fill in your details. Stock is validated in real-time before confirmation.</div>
+    <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:20px;padding:40px">
+
+      <div class="d-flex align-items-center gap-2 mb-3" style="font-size:.71rem;font-weight:700;color:var(--bL);letter-spacing:.14em;text-transform:uppercase">
+        <div style="width:18px;height:1.5px;background:var(--bdrB)"></div> Customer Information
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="rk-label">Full Name</label>
+          <input type="text" id="f-name" class="rk-input" placeholder="John Smith" oninput="validateForm()">
+        </div>
+        <div class="col-md-6">
+          <label class="rk-label">Email Address</label>
+          <input type="email" id="f-email" class="rk-input" placeholder="john@example.com" oninput="validateForm()">
+        </div>
+        <div class="col-md-6">
+          <label class="rk-label">Phone Number</label>
+          <input type="tel" id="f-phone" class="rk-input" placeholder="+1 (416) 555-0123" oninput="validateForm()">
+        </div>
+        <div class="col-md-6">
+          <label class="rk-label">Shipping Address</label>
+          <input type="text" id="f-addr" class="rk-input" placeholder="123 Main St, Toronto, ON" oninput="validateForm()">
+        </div>
+      </div>
+
+      <hr style="border-color:var(--bdr);margin:24px 0">
+
+      <div class="d-flex align-items-center gap-2 mb-3" style="font-size:.71rem;font-weight:700;color:var(--bL);letter-spacing:.14em;text-transform:uppercase">
+        <div style="width:18px;height:1.5px;background:var(--bdrB)"></div> Product Selection
+      </div>
+      <div class="mb-3">
+        <label class="rk-label">Select iPhone Model</label>
+        <select id="f-product" class="rk-input" onchange="onProductChange()">
+          <option value="">-- Choose a product --</option>
+        </select>
+      </div>
+
+      <div id="qtySection" class="d-none">
+        <label class="rk-label">Quantity</label>
+        <input type="number" id="f-qty" class="rk-input mb-2" value="1" min="1" oninput="onQtyChange()">
+        <div id="stockFeedback" class="mb-3 p-3" style="border-radius:9px;font-size:.81rem;font-weight:600;background:var(--card);border:1px solid var(--bdr)"></div>
+        <div class="mb-3 p-3" style="border-radius:10px;background:rgba(37,99,235,.06);border:1px solid var(--bdrB)">
+          <div style="font-size:.71rem;color:var(--txtS);margin-bottom:8px">Order Summary</div>
+          <div id="summaryLines"></div>
+          <hr style="border-color:var(--bdr);margin:10px 0">
+          <div class="d-flex justify-content-between" style="font-size:1rem;font-weight:800">
+            <span>Total</span><span style="color:var(--bL)" id="summaryTotal">CAD $0</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="submitBtn" class="btn-rk w-100 py-3" style="font-size:.97rem;border-radius:12px" onclick="submitOrder()" disabled>
+        Place Order
+      </button>
+      <p class="text-center mt-2" style="font-size:.71rem;color:var(--txtM)">
+        🔒 Real-time stock validation · Azure App Service + Azure SQL Database
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ CONFIRM ════════════ -->
+<div id="sec-confirm" class="rk-section d-none" style="background:var(--bg);min-height:90vh;padding:80px 0">
+  <div class="container" style="max-width:520px">
+    <div id="confirmCard" style="background:var(--surf);border:1px solid rgba(16,185,129,.28);border-radius:24px;padding:56px 40px;text-align:center"></div>
+  </div>
+</div>
+
+<!-- ════════════ PRODUCT MODAL ════════════ -->
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <div style="font-size:.61rem;color:var(--txtM);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Product Details</div>
+          <h5 class="modal-title" id="modalTitle" style="font-size:1.08rem;font-weight:700;margin:0;color:var(--txt)"></h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="row g-4" id="modalBody"></div>
+        <div class="mt-3 p-3" style="background:var(--card);border-radius:11px">
+          <div style="font-size:.67rem;color:var(--txtM);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Description</div>
+          <p id="modalDesc" style="font-size:.88rem;color:var(--txtS);line-height:1.72;margin:0"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer id="main-footer" style="padding:52px 0 28px">
+  <div class="container-xl">
+    <div class="row g-5 mb-4">
+      <div class="col-md-4">
+        <div class="grad-txt mb-3" style="font-size:1.45rem;font-weight:900;letter-spacing:-.04em">RK Store</div>
+        <p style="font-size:.83rem;color:var(--txtM);line-height:1.75;max-width:250px;margin-bottom:12px">Premium iPhones, cloud-powered ordering, and enterprise-grade Azure architecture for the modern shopper.</p>
+        <div style="font-size:.72rem;color:var(--txtM)">📍 Mississauga, Ontario, Canada</div>
+      </div>
+      <div class="col-6 col-md-2">
+        <div style="font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txtS);margin-bottom:14px">Shop</div>
+        <a class="foot-link" onclick="go('catalog','new')">New iPhones</a>
+        <a class="foot-link" onclick="go('catalog','used')">Certified Used</a>
+        <a class="foot-link" onclick="go('catalog','special')">Special Offers</a>
+        <a class="foot-link" onclick="go('catalog','limited')">Limited Stock</a>
+      </div>
+      <div class="col-6 col-md-2">
+        <div style="font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txtS);margin-bottom:14px">Support</div>
+        <span class="foot-link">Order Tracking</span>
+        <span class="foot-link">Warranty Info</span>
+        <span class="foot-link">Returns Policy</span>
+        <span class="foot-link">Contact Us</span>
+      </div>
+      <div class="col-md-4">
+        <div style="font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txtS);margin-bottom:14px">⚡ Azure Architecture</div>
+        <div class="d-flex flex-wrap gap-2" id="azBadges"></div>
+      </div>
+    </div>
+    <hr style="border-color:var(--bdr)">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2" style="font-size:.75rem;color:var(--txtM)">
+      <span>© 2025 RK Store. All rights reserved. Enterprise Multi-Tier E-Commerce on Azure.</span>
+      <span>Django · Azure App Service · Azure SQL Database</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   WHAT CHANGED HERE (Stage 7 — Frontend/Backend Connection):
+
+   BEFORE: const PRODS = [...] — 12 products hardcoded in JS
+   AFTER:  let PRODS = []      — empty, filled by API call
+
+   BEFORE: const inv = {}; PRODS.forEach(...) — fake stock
+   AFTER:  let inv = {}        — real stock from Azure SQL
+
+   Products now come from Django → Azure SQL Database.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Live data — populated by loadProducts() on page load */
+let PRODS = [];
+let inv   = {};
+
+/* State */
+let curSec = 'home', curFilter = 'all', searchTerm = '';
+let _sc = 0, bsModal = null;
+
+/* ═══════════════════════ COLOR MAPPING ═══════════════════════
+   WHAT THIS IS:
+   The API returns color names like "Black Titanium".
+   The phone SVG generator needs hex color codes (c1, c2, ac).
+   This function maps color names → hex codes.
+   It stays in the frontend because it's purely visual design —
+   the database doesn't need to know about SVG colors.
+   ═══════════════════════════════════════════════════════════ */
+function getPhoneColors(colorName) {
+  const map = {
+    'Black Titanium':   {c1:'#1C1C1E',c2:'#2C2C2E',ac:'#3B82F6'},
+    'Natural Titanium': {c1:'#C8B89A',c2:'#A89070',ac:'#F59E0B'},
+    'Midnight':         {c1:'#1C1C2E',c2:'#0A0A1E',ac:'#6366F1'},
+    'Teal':             {c1:'#1A7A7A',c2:'#0D5C5C',ac:'#14B8A6'},
+    'Desert Titanium':  {c1:'#C4A882',c2:'#A8875E',ac:'#F59E0B'},
+    'White Titanium':   {c1:'#F2F1EF',c2:'#D5D3CF',ac:'#CBD5E1'},
+    'Ultramarine':      {c1:'#3949AB',c2:'#1A237E',ac:'#60A5FA'},
+    'Rose':             {c1:'#E8A0A0',c2:'#D07070',ac:'#F472B6'},
+    'Blue Titanium':    {c1:'#4A6FA5',c2:'#2D5090',ac:'#60A5FA'},
+    'Pink':             {c1:'#F4A0C0',c2:'#E070A0',ac:'#F472B6'},
+  };
+  return map[colorName] || {c1:'#1C1C1E',c2:'#2C2C2E',ac:'#3B82F6'};
+}
+
+/* ═══════════════════════ API — LOAD PRODUCTS ═══════════════════════
+   WHAT THIS DOES:
+   1. Calls GET /api/products/ — Django reads from Azure SQL
+   2. Maps API response to the format our rendering functions expect
+   3. Builds the inv{} inventory object from live stock data
+   4. Then renders all home sections with real data
+
+   This replaces the hardcoded PRODS array entirely.
+   ═══════════════════════════════════════════════════════════════ */
+async function loadProducts() {
+  showLoader(true);
+  try {
+    const res  = await fetch('/api/products/');
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    const data = await res.json();
+
+    /* Map API fields → shorthand names used throughout this file */
+    PRODS = data.products.map(p => ({
+      ...p,
+      ...getPhoneColors(p.color),       // add c1, c2, ac from color name
+      orig: parseFloat(p.original_price) || null,
+      bat:  p.battery_health,
+      feat: p.is_featured,
+      lat:  p.is_latest,
+      spc:  p.is_special_offer,
+      lim:  p.is_limited,
+      cond: p.condition,
+      desc: p.description,
+    }));
+
+    /* Build live inventory from database stock values */
+    PRODS.forEach(p => inv[p.id] = p.stock);
+
+    /* Render all sections now that we have real data */
+    renderHeroPhones();
+    renderCats();
+    renderFeatured();
+    renderLatest();
+    renderOffers();
+    renderLimited();
+    renderAzBadges();
+    renderCatalog();
+    populateSel();
+
+  } catch (err) {
+    console.error('Failed to load products:', err);
+    showToast('Failed to load products. Please refresh.', 'error');
+  } finally {
+    showLoader(false);
+  }
+}
+
+/* ═══════════════════════ CSRF HELPER ═══════════════════════
+   Django requires a CSRF token for POST requests.
+   This reads it from the cookie Django sets automatically.
+   ═══════════════════════════════════════════════════════════ */
+function getCsrfToken() {
+  const match = document.cookie.match(/csrftoken=([^;]+)/);
+  return match ? match[1] : '';
+}
+
+/* ═══════════════════════ LOADER ═══════════════════════ */
+function showLoader(show) {
+  const el = document.getElementById('pageLoader');
+  if (el) el.style.display = show ? 'flex' : 'none';
+}
+
+/* ═══════════════════════ PHONE SVG ═══════════════════════ */
+function phoneSVG(p, size = 140) {
+  const w = Math.round(size * 0.5), h = size, id = ++_sc;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 60 120" style="filter:drop-shadow(0 10px 28px ${p.ac}55)">
+    <defs>
+      <linearGradient id="BG${id}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${p.c1}"/><stop offset="100%" stop-color="${p.c2}"/>
+      </linearGradient>
+      <linearGradient id="SC${id}" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#1a1a40"/><stop offset="100%" stop-color="#05091a"/>
+      </linearGradient>
+    </defs>
+    <rect x="1" y="1" width="58" height="118" rx="11" fill="url(#BG${id})"/>
+    <rect x="1" y="1" width="58" height="118" rx="11" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.75"/>
+    <rect x="4" y="4" width="52" height="112" rx="7.5" fill="url(#SC${id})"/>
+    <rect x="4" y="4" width="52" height="112" rx="7.5" fill="${p.ac}" fill-opacity="0.04"/>
+    <rect x="21" y="7" width="18" height="5" rx="2.5" fill="#000" opacity="0.95"/>
+    <rect x="8"  y="20" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.72"/>
+    <rect x="22" y="20" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.60"/>
+    <rect x="36" y="20" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.50"/>
+    <rect x="8"  y="34" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.50"/>
+    <rect x="22" y="34" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.38"/>
+    <rect x="36" y="34" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.28"/>
+    <rect x="8"  y="50" width="44" height="28" rx="5" fill="rgba(255,255,255,0.04)" stroke="${p.ac}" stroke-opacity="0.15" stroke-width="0.5"/>
+    <rect x="12" y="55" width="22" height="2.5" rx="1.2" fill="rgba(255,255,255,0.25)"/>
+    <rect x="12" y="61" width="15" height="2" rx="1" fill="rgba(255,255,255,0.12)"/>
+    <text x="12" y="73" font-size="5.5" fill="${p.ac}" font-weight="bold" opacity="0.9" font-family="monospace">$${p.price}</text>
+    <rect x="8"  y="84" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.38"/>
+    <rect x="22" y="84" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.30"/>
+    <rect x="36" y="84" width="10" height="10" rx="2.5" fill="${p.ac}" opacity="0.22"/>
+    <rect x="22" y="111" width="16" height="2.5" rx="1.2" fill="rgba(255,255,255,0.2)"/>
+  </svg>`;
+}
+
+/* ═══════════════════════ STOCK / COND BADGES ═══════════════════════ */
+function sbadge(id) {
+  const s = inv[id], p = PRODS.find(x => x.id === id);
+  if (!s)               return `<span class="sb-out">Out of Stock</span>`;
+  if (p.lim || s <= 3) return `<span class="sb-nl">Only ${s} left</span>`;
+  if (s <= 8)           return `<span class="sb-ls">Limited Stock</span>`;
+  return `<span class="sb-in">In Stock</span>`;
+}
+function cbadge(cond) {
+  return cond === 'New' ? '<span class="b-new">New</span>' : '<span class="b-used">Certified Used</span>';
+}
+
+/* ═══════════════════════ PRODUCT CARD ═══════════════════════ */
+function card(p) {
+  const bg = `radial-gradient(ellipse at 50% 40%,${p.ac}14 0%,transparent 65%),linear-gradient(180deg,#0D1528 0%,#111E35 100%)`;
+  const can = inv[p.id] > 0;
+  return `<div class="col">
+    <div class="rk-card h-100 d-flex flex-column" style="cursor:pointer">
+      <div style="position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:4px;z-index:2">
+        ${cbadge(p.cond)}
+        ${p.spc ? '<span class="b-sale">SALE</span>' : ''}
+        ${p.lim ? '<span class="b-lim">LIMITED</span>' : ''}
+      </div>
+      <div class="card-img-wrap" style="background:${bg}" onclick="openModal(${p.id})">
+        ${phoneSVG(p, 132)}
+      </div>
+      <div class="p-3 flex-grow-1 d-flex flex-column" onclick="openModal(${p.id})">
+        <div style="font-size:.61rem;color:var(--txtM);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">${p.storage} · ${p.color}</div>
+        <div style="font-size:.97rem;font-weight:700;margin-bottom:8px;line-height:1.3">${p.name}</div>
+        <div class="d-flex gap-1 flex-wrap mb-3">
+          ${p.bat ? `<span class="spec-pill">🔋 ${p.bat}</span>` : ''}
+          <span class="spec-pill">${p.warranty}</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-end mt-auto">
+          <div>
+            ${p.orig ? `<div class="price-orig">CAD $${p.orig.toLocaleString()}</div>` : ''}
+            <div class="price-main">CAD $${p.price.toLocaleString()}</div>
+          </div>
+          ${sbadge(p.id)}
+        </div>
+      </div>
+      <div class="px-3 pb-3 d-flex gap-2">
+        <button class="btn-rk flex-grow-1 py-2" style="font-size:.82rem" onclick="quickOrder(${p.id})" ${can ? '' : 'disabled'}>
+          ${can ? 'Order Now' : 'Out of Stock'}
+        </button>
+        <button class="btn-ghost py-2 px-3" style="font-size:.82rem" onclick="openModal(${p.id})">Info</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════ NAVIGATION ═══════════════════════ */
+function go(sec, filter = null) {
+  curSec = sec;
+  document.querySelectorAll('.rk-section').forEach(s => s.classList.add('d-none'));
+  document.getElementById('sec-' + sec).classList.remove('d-none');
+  document.querySelectorAll('.rk-nav .nav-link[data-sec]').forEach(l => {
+    l.classList.toggle('active', l.dataset.sec === sec || (sec === 'confirm' && l.dataset.sec === 'order'));
+  });
+  document.getElementById('main-footer').classList.toggle('d-none', sec === 'confirm');
+  if (filter) { curFilter = filter; syncTabs(); }
+  if (sec === 'catalog') renderCatalog();
+  if (sec === 'order') populateSel();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ═══════════════════════ CATALOG ═══════════════════════ */
+function setFilter(f) { curFilter = f; syncTabs(); renderCatalog(); }
+function syncTabs() {
+  document.querySelectorAll('#filterTabs .btn-filter').forEach(b => b.classList.toggle('active', b.dataset.f === curFilter));
+}
+function onSearch(v) { searchTerm = v; renderCatalog(); }
+function renderCatalog() {
+  const filtered = PRODS.filter(p => {
+    const ms = [p.name, p.color, p.storage].join(' ').toLowerCase().includes(searchTerm.toLowerCase());
+    const mf = curFilter === 'all'
+      || (curFilter === 'new'     && p.cond === 'New')
+      || (curFilter === 'used'    && p.cond === 'Used')
+      || (curFilter === 'special' && p.spc)
+      || (curFilter === 'limited' && (p.lim || inv[p.id] <= 3));
+    return ms && mf;
+  });
+  const grid = document.getElementById('catalogGrid');
+  const nr   = document.getElementById('noResults');
+  document.getElementById('catCount').textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''} found`;
+  if (!filtered.length) { grid.innerHTML = ''; nr.classList.remove('d-none'); }
+  else { nr.classList.add('d-none'); grid.innerHTML = filtered.map(card).join(''); }
+}
+
+/* ═══════════════════════ HOME RENDERS ═══════════════════════ */
+function renderHeroPhones() {
+  document.getElementById('heroPhones').innerHTML = `
+    <div class="fl1" style="filter:drop-shadow(0 30px 54px ${PRODS[0].ac}44)">${phoneSVG(PRODS[0], 210)}</div>
+    <div class="fl2" style="margin-top:60px;filter:drop-shadow(0 30px 50px ${PRODS[1].ac}38)">${phoneSVG(PRODS[1], 165)}</div>
+    <div class="fl3" style="margin-top:-28px;filter:drop-shadow(0 30px 50px ${PRODS[2].ac}38)">${phoneSVG(PRODS[2], 142)}</div>`;
+}
+
+function renderCats() {
+  const cats = [
+    {ic:'📱',lb:'New iPhones',   col:'#2563EB',glo:'rgba(37,99,235,.14)', f:'new',    cnt:PRODS.filter(p=>p.cond==='New').length+' Models'},
+    {ic:'♻️', lb:'Certified Used',col:'#14B8A6',glo:'rgba(20,184,166,.14)',f:'used',   cnt:PRODS.filter(p=>p.cond==='Used').length+' Models'},
+    {ic:'🏷️',lb:'Special Offers',col:'#F59E0B',glo:'rgba(245,158,11,.14)',f:'special',cnt:PRODS.filter(p=>p.spc).length+' Deals'},
+    {ic:'⚡', lb:'Limited Stock', col:'#EF4444',glo:'rgba(239,68,68,.14)', f:'limited',cnt:PRODS.filter(p=>p.lim||p.stock<=3).length+' Items'},
+  ];
+  document.getElementById('catCards').innerHTML = cats.map(c=>`
+    <div class="col">
+      <div class="cat-card" onclick="go('catalog','${c.f}')"
+        onmouseenter="this.style.borderColor='${c.col}77';this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px ${c.glo}'"
+        onmouseleave="this.style.borderColor='var(--bdr)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="width:50px;height:50px;border-radius:14px;background:${c.col}22;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin:0 auto 13px;border:1px solid ${c.col}33">${c.ic}</div>
+        <div style="font-size:.88rem;font-weight:700;margin-bottom:3px">${c.lb}</div>
+        <div style="font-size:.7rem;color:var(--txtM)">${c.cnt}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderFeatured() { document.getElementById('featuredGrid').innerHTML = PRODS.filter(p=>p.feat).slice(0,4).map(card).join(''); }
+function renderLatest()   { document.getElementById('latestGrid').innerHTML   = PRODS.filter(p=>p.lat).slice(0,4).map(card).join(''); }
+
+function renderOffers() {
+  document.getElementById('offersGrid').innerHTML = PRODS.filter(p=>p.spc).map(p=>`
+    <div class="col">
+      <div style="background:linear-gradient(135deg,#111E35 0%,#162444 100%);border:1px solid rgba(245,158,11,.18);border-radius:16px;padding:26px 24px;display:flex;gap:22px;align-items:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden"
+        onclick="openModal(${p.id})"
+        onmouseenter="this.style.borderColor='rgba(245,158,11,.48)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 20px 50px rgba(245,158,11,.18)'"
+        onmouseleave="this.style.borderColor='rgba(245,158,11,.18)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="position:absolute;top:-60px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.18) 0%,transparent 70%);pointer-events:none"></div>
+        ${phoneSVG(p, 112)}
+        <div class="flex-grow-1">
+          <div style="background:#F59E0B;color:#000;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:10px">🏷️ Special Offer</div>
+          <div style="font-size:1.02rem;font-weight:700;margin-bottom:5px">${p.name}</div>
+          <div style="font-size:.76rem;color:var(--txtS);margin-bottom:11px">${p.storage} · ${p.color} · ${p.cond}</div>
+          <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div>
+              <div class="price-orig">CAD $${p.orig.toLocaleString()}</div>
+              <div style="font-size:1.25rem;font-weight:800">CAD $${p.price.toLocaleString()}</div>
+            </div>
+            <span style="background:rgba(245,158,11,.18);color:#F59E0B;border:1px solid rgba(245,158,11,.3);font-size:.73rem;font-weight:700;padding:4px 11px;border-radius:6px">Save $${(p.orig-p.price).toLocaleString()}</span>
+          </div>
+          <button class="btn-rk mt-3 px-3 py-2" style="font-size:.8rem" onclick="event.stopPropagation();quickOrder(${p.id})">Order Now</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderLimited() {
+  document.getElementById('limitedGrid').innerHTML = PRODS.filter(p=>p.lim||p.stock<=3).map(p=>`
+    <div class="col">
+      <div style="background:var(--card);border:1px solid rgba(239,68,68,.18);border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:all .3s"
+        onclick="openModal(${p.id})"
+        onmouseenter="this.style.borderColor='rgba(239,68,68,.42)';this.style.boxShadow='0 20px 50px rgba(239,68,68,.1)'"
+        onmouseleave="this.style.borderColor='rgba(239,68,68,.18)';this.style.boxShadow='none'">
+        <div style="height:3px;background:linear-gradient(90deg,#EF4444,#F59E0B);position:absolute;top:0;left:0;right:0"></div>
+        <div class="d-flex gap-3 align-items-center p-4" style="padding-top:26px!important">
+          ${phoneSVG(p, 100)}
+          <div class="flex-grow-1">
+            <span style="background:rgba(239,68,68,.13);color:#FCA5A5;border:1px solid rgba(239,68,68,.26);font-size:.59rem;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px">⚠️ ONLY ${inv[p.id]} LEFT</span>
+            <div style="font-size:.98rem;font-weight:700;margin-bottom:4px">${p.name}</div>
+            <div style="font-size:.75rem;color:var(--txtS);margin-bottom:13px">${p.storage} · ${p.color}</div>
+            <div style="background:rgba(255,255,255,.06);border-radius:4px;height:5px;overflow:hidden;margin-bottom:4px">
+              <div style="height:100%;width:${Math.min(inv[p.id]*15,92)}%;background:linear-gradient(90deg,#EF4444,#F59E0B);border-radius:4px"></div>
+            </div>
+            <div class="d-flex justify-content-between" style="font-size:.61rem;color:#FCA5A5;font-weight:600;margin-bottom:13px">
+              <span>Selling fast</span><span>${inv[p.id]} remaining</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span style="font-size:1.1rem;font-weight:800">CAD $${p.price.toLocaleString()}</span>
+              <button class="btn-rk py-2 px-3" style="font-size:.78rem;background:#EF4444" onclick="event.stopPropagation();quickOrder(${p.id})">Order Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderAzBadges() {
+  document.getElementById('azBadges').innerHTML =
+    ['App Service','SQL Database','Key Vault','App Insights','Azure Monitor','Front Door','Auto-Scale','Load Testing','ACS Email','ACS SMS']
+    .map(s=>`<span class="az-badge">☁️ ${s}</span>`).join('');
+}
+
+/* ═══════════════════════ MODAL ═══════════════════════ */
+function openModal(id) {
+  const p = PRODS.find(x => x.id === id);
+  if (!p) return;
+  const stock = inv[p.id];
+  const specs = [
+    ['Model', p.name], ['Storage', p.storage], ['Color', p.color],
+    ['Condition', p.cond], ['Warranty', p.warranty],
+    ...(p.bat ? [['Battery Health', p.bat]] : []),
+    ['Stock', stock ? `${stock} units available` : 'Out of Stock'],
+  ];
+  document.getElementById('modalTitle').textContent = p.name;
+  document.getElementById('modalDesc').textContent  = p.desc;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="col-md-5">
+      <div style="background:var(--card);border-radius:13px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:220px">
+        ${phoneSVG(p, 188)}
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="d-flex gap-2 mb-3 flex-wrap">
+        ${sbadge(p.id)}
+        ${p.spc ? '<span class="b-sale">SALE</span>' : ''}
+      </div>
+      ${specs.map(([k,v])=>`
+        <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--bdr)">
+          <span style="font-size:.8rem;color:var(--txtM)">${k}</span>
+          <span style="font-size:.86rem;font-weight:600">${v}</span>
+        </div>`).join('')}
+      <div class="mt-3">
+        ${p.orig ? `<div class="price-orig">CAD $${p.orig.toLocaleString()}</div>` : ''}
+        <div style="font-size:1.42rem;font-weight:900;letter-spacing:-.03em;margin-bottom:14px">CAD $${p.price.toLocaleString()}</div>
+        <button class="btn-rk w-100 py-2" style="font-size:.9rem" onclick="quickOrder(${p.id});bsModal.hide()" ${stock ? '' : 'disabled'}>
+          ${stock ? 'Order Now' : 'Out of Stock'}
+        </button>
+      </div>
+    </div>`;
+  if (!bsModal) bsModal = new bootstrap.Modal(document.getElementById('productModal'));
+  bsModal.show();
+}
+
+/* ═══════════════════════ ORDER FORM ═══════════════════════ */
+function populateSel() {
+  document.getElementById('f-product').innerHTML =
+    '<option value="">-- Choose a product --</option>' +
+    PRODS.filter(p => inv[p.id] > 0).map(p =>
+      `<option value="${p.id}">${p.name} · ${p.storage} · ${p.color} · ${p.cond} — CAD $${p.price.toLocaleString()} (${inv[p.id]} left)</option>`
+    ).join('');
+}
+
+function quickOrder(id) {
+  go('order');
+  setTimeout(() => {
+    document.getElementById('f-product').value = String(id);
+    onProductChange();
+  }, 60);
+}
+
+function onProductChange() {
+  const pid = document.getElementById('f-product').value;
+  const qs  = document.getElementById('qtySection');
+  if (!pid) { qs.classList.add('d-none'); validateForm(); return; }
+  document.getElementById('f-qty').value = '1';
+  qs.classList.remove('d-none');
+  onQtyChange();
+}
+
+function onQtyChange() {
+  const pid = document.getElementById('f-product').value;
+  if (!pid) return;
+  const p   = PRODS.find(x => x.id === parseInt(pid));
+  const qty = parseInt(document.getElementById('f-qty').value) || 1;
+  const s   = inv[p.id];
+  const fb  = document.getElementById('stockFeedback');
+  if (qty > s) {
+    fb.style.borderColor = 'rgba(239,68,68,.32)'; fb.style.color = '#EF4444';
+    fb.textContent = `⚠️ Only ${s} unit(s) available — reduce quantity`;
+  } else if (s <= 3) {
+    fb.style.borderColor = 'rgba(245,158,11,.32)'; fb.style.color = '#F59E0B';
+    fb.textContent = `⚡ Limited! Only ${s} left — ${qty} unit(s) will be reserved`;
+  } else {
+    fb.style.borderColor = 'rgba(16,185,129,.24)'; fb.style.color = '#10B981';
+    fb.textContent = `✅ ${s} units in stock — ${qty} available to order`;
+  }
+  document.getElementById('summaryLines').innerHTML =
+    [['Product',p.name],['Storage',p.storage],['Color',p.color],['Condition',p.cond],
+     ['Price',`CAD $${p.price.toLocaleString()}`],['Quantity',`× ${qty}`]]
+    .map(([k,v])=>`<div class="d-flex justify-content-between" style="font-size:.86rem;margin-bottom:4px"><span style="color:var(--txtS)">${k}</span><span>${v}</span></div>`)
+    .join('');
+  document.getElementById('summaryTotal').textContent = `CAD $${(p.price * Math.max(qty, 1)).toLocaleString()}`;
+  validateForm();
+}
+
+function validateForm() {
+  const n = document.getElementById('f-name').value.trim();
+  const e = document.getElementById('f-email').value.trim();
+  const ph= document.getElementById('f-phone').value.trim();
+  const a = document.getElementById('f-addr').value.trim();
+  const pid=document.getElementById('f-product').value;
+  const q = parseInt(document.getElementById('f-qty').value) || 0;
+  let ok = !!(n && e && ph && a && pid && q >= 1);
+  if (ok && pid) { const p = PRODS.find(x => x.id === parseInt(pid)); if (p && q > inv[p.id]) ok = false; }
+  document.getElementById('submitBtn').disabled = !ok;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WHAT CHANGED HERE (Stage 7 — Frontend/Backend Connection):
+
+   BEFORE: Generated fake order number (RK-XXXXXXX) in JS
+           Decremented stock in a JS variable
+           Never talked to Django or the database
+
+   AFTER:  Calls POST /api/orders/ → Django REST API
+           Django validates stock in Azure SQL Database
+           Django creates order record in Azure SQL
+           Django sends confirmation email via ACS
+           Real order number returned from database
+           Real stock decremented in Azure SQL
+   ═══════════════════════════════════════════════════════════════ */
+async function submitOrder() {
+  const name  = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const addr  = document.getElementById('f-addr').value.trim();
+  const pid   = parseInt(document.getElementById('f-product').value);
+  const qty   = parseInt(document.getElementById('f-qty').value) || 1;
+
+  /* Disable button while API call is in progress */
+  const btn = document.getElementById('submitBtn');
+  btn.disabled    = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    /* POST to Django API — this goes to views.py → OrderCreateView */
+    const res = await fetch('/api/orders/', {
+      method:  'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken':  getCsrfToken(),   /* required by Django security */
+      },
+      body: JSON.stringify({
+        customer_name:    name,
+        customer_email:   email,
+        customer_phone:   phone,
+        customer_address: addr,
+        product_id:       pid,
+        quantity:         qty,
+      }),
+    });
+
+    const data = await res.json();
+
+    /* API returned an error (e.g. out of stock) */
+    if (!res.ok) {
+      const errMsg = data.errors
+        ? Object.values(data.errors).flat().join(' ')
+        : data.error || 'Order could not be placed. Please try again.';
+      showToast(errMsg, 'error');
+      btn.disabled    = false;
+      btn.textContent = 'Place Order';
+      return;
+    }
+
+    /* Success — update local inventory so UI reflects new stock immediately */
+    inv[pid] = Math.max(0, (inv[pid] || 0) - qty);
+
+    /* Reset form */
+    ['f-name','f-email','f-phone','f-addr'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-product').value = '';
+    document.getElementById('qtySection').classList.add('d-none');
+    btn.disabled    = true;
+    btn.textContent = 'Place Order';
+    populateSel();
+
+    /* Show confirmation with REAL data from API */
+    showToast('Order confirmed! 🎉', 'success');
+    renderConfirm(data);
+    go('confirm');
+
+  } catch (err) {
+    console.error('Order failed:', err);
+    showToast('Connection error. Please try again.', 'error');
+    btn.disabled    = false;
+    btn.textContent = 'Place Order';
+  }
+}
+
+/* ═══════════════════════ CONFIRMATION ═══════════════════════
+   WHAT CHANGED:
+   BEFORE: renderConfirm() read from global confirmData variable
+           Order number was fake (generated in JS)
+           Email status was always "sent" (fake)
+
+   AFTER:  renderConfirm(data) takes real API response
+           Order number comes from Django/Azure SQL
+           email_sent shows real status from ACS
+   ═══════════════════════════════════════════════════════════ */
+function renderConfirm(data) {
+  /* data = response from POST /api/orders/ */
+  const rows = [
+    ['Product',   data.product],
+    ['Quantity',  data.quantity],
+    ['Total',     `CAD $${parseFloat(data.total).toLocaleString()}`],
+    ['Status',    'Confirmed ✅'],
+  ];
+  document.getElementById('confirmCard').innerHTML = `
+    <div style="width:76px;height:76px;background:rgba(16,185,129,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;border:2px solid rgba(16,185,129,.26)">
+      <i class="bi bi-check-circle-fill" style="font-size:2rem;color:#10B981"></i>
+    </div>
+    <h2 style="font-size:1.65rem;font-weight:800;letter-spacing:-.03em;margin-bottom:7px">Order Confirmed!</h2>
+    <p style="color:var(--txtS);font-size:.91rem;margin-bottom:22px">
+      Thank you, ${data.customer}. A confirmation was sent to <strong style="color:var(--bL)">${data.email}</strong>.
+    </p>
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:11px;padding:14px;margin-bottom:22px;font-size:1.2rem;font-weight:800;letter-spacing:.06em;color:var(--bL)">${data.order_number}</div>
+    <div style="background:var(--card);border-radius:12px;padding:18px;margin-bottom:22px;text-align:left">
+      <div style="font-size:.67rem;font-weight:700;color:var(--txtS);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Order Details</div>
+      ${rows.map(([k,v])=>`<div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--bdr);font-size:.85rem"><span style="color:var(--txtM)">${k}</span><span style="font-weight:600">${v}</span></div>`).join('')}
+    </div>
+    <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);border-radius:9px;padding:11px 14px;margin-bottom:22px;font-size:.79rem;color:#10B981">
+      ${data.email_sent ? '📧 Confirmation email sent via Azure Communication Services' : '📧 Order saved to Azure SQL Database'}
+    </div>
+    <div class="d-flex gap-3">
+      <button class="btn-rk flex-grow-1 py-2" onclick="go('catalog')">Continue Shopping</button>
+      <button class="btn-ghost flex-grow-1 py-2" onclick="go('home')">Back to Home</button>
+    </div>`;
+}
+
+/* ═══════════════════════ TOAST ═══════════════════════ */
+function showToast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `rk-toast ${type}`;
+  el.innerHTML = msg;
+  const area = document.getElementById('toastArea');
+  area.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+/* ═══════════════════════ INIT ═══════════════════════
+   WHAT CHANGED:
+   BEFORE: Rendered sections directly from hardcoded data
+   AFTER:  Calls loadProducts() which fetches from API first,
+           then renders everything once real data arrives
+   ═══════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderAzBadges();
+  loadProducts();   /* fetches /api/products/ → then renders all sections */
+});
+</script>
+</body>
+</html>

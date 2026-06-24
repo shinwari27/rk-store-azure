@@ -1,0 +1,27 @@
+# ── Django Core ──────────────────────────────────────────────────────────────
+Django>=4.2,<5.0
+djangorestframework>=3.14
+django-cors-headers>=4.3
+
+# ── Azure SQL Database ────────────────────────────────────────────────────────
+mssql-django>=1.4           # Django backend for Azure SQL / SQL Server
+pyodbc>=5.0                 # ODBC driver interface (requires ODBC Driver 18)
+
+# ── Azure Key Vault ───────────────────────────────────────────────────────────
+azure-keyvault-secrets>=4.7
+azure-identity>=1.15        # DefaultAzureCredential (managed identity + local CLI)
+
+# ── Azure Communication Services ──────────────────────────────────────────────
+azure-communication-email>=1.0
+azure-communication-sms>=1.0
+
+# ── Application Insights ──────────────────────────────────────────────────────
+opencensus-ext-azure>=1.1   # Azure Monitor / App Insights telemetry
+opencensus-ext-django>=0.8
+
+# ── Static Files + Production Server ─────────────────────────────────────────
+whitenoise>=6.6             # Serve static files efficiently on App Service
+gunicorn>=21.2              # WSGI server for production
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-decouple>=3.8        # Local .env file support for dev
