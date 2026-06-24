@@ -305,7 +305,6 @@ if APPINSIGHTS_CONNECTION_STRING and not DEBUG:
         },
     }
     # Add OpenCensus middleware for request tracking
-    MIDDLEWARE.insert(0, 'opencensus.ext.django.config.OpenCensusConfig')
 else:
     LOGGING = {
         'version': 1,
